@@ -17,6 +17,13 @@ public class Keypad extends KeyAdapter {
             case 'd':
                 player.setxChange(SPEED);
                 break;
+            case 'b':
+                if (Launcher.timer.isRunning()){
+                    Launcher.timer.stop();
+                } else {
+                    Launcher.timer.start();
+                }
+                break;
             case ' ':GameLoop.shoot();
         }
     }
