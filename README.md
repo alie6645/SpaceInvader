@@ -2,10 +2,8 @@
 basic JSwing version of Space Invaders
 
 **Bugs**
-- Sometimes frame is blank at launch, running it again usually fixes it
-  - I don't know why it does that
-- Possibility of concurrent modification of enemy list in collision checking
-  - Probably just thread issues, remove enhanced for loop?
+- Possibility of concurrent modification or index out of bounds of enemy list in collision checking
+  - Probably unprocessed size change from removal
 
 **Done**
 - Enemy movement
