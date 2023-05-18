@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 
 public class Keypad extends KeyAdapter {
     Ship player = GameLoop.player;
-    final double SPEED = 2;
+    final double SPEED = 3;
     @Override
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyChar()){
@@ -24,7 +24,11 @@ public class Keypad extends KeyAdapter {
                     Launcher.timer.start();
                 }
                 break;
-            case ' ':GameLoop.shoot();
+            case ' ':
+                GameLoop.shoot();
+                if (!Launcher.timer.isRunning()){
+                    Launcher.endGame();
+                }
         }
     }
 

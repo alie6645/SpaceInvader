@@ -53,12 +53,28 @@ public class Fleet {
      */
     public void update(){
         double next = getEdge().getX()+getEdge().getxChange();
-        if (next<0 || next> GameLoop.width-40){
+        if (next<0 || next> GameLoop.WIDTH -40){
             for (Ship ship:ships){
-                ship.shift(0,5);
+                ship.shift(0,10);
                 ship.setxChange(-ship.getxChange());
             }
         }
+    }
+
+    /**
+     * shifts all ships
+     * @param x
+     * @param y
+     */
+    public void shift(int x, int y){
+        for (Ship ship:ships) {
+            ship.shift(x, y);
+        }
+    }
+
+    public Ship random(){
+        int index = (int)(Math.random()*ships.size());
+        return ships.get(index);
     }
 
     /**
@@ -67,11 +83,12 @@ public class Fleet {
      * @param cols columns in grid
      */
     public void createFleet(int rows, int cols){
-        int colSpace = (GameLoop.width-100)/cols;
+        int colSpace = (GameLoop.WIDTH -100)/cols;
         for (int i=0; i<rows; i++){
             for (int j=0; j<cols; j++){
                 Ship temp = new Ship();
                 temp.addShape(new Rectangle(20,20));
+                temp.addImage("src/alien.png");
                 temp.shift(j*colSpace+50,i*50);
                 temp.setxChange(2);
                 ships.add(temp);

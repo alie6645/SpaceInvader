@@ -1,8 +1,12 @@
 package nodes;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +15,7 @@ import java.util.List;
  */
 public class Ship extends Node{
     List<Shape> sprite = new ArrayList<>();
+    BufferedImage img;
     AffineTransform translate = new AffineTransform();
 
     /**
@@ -67,6 +72,14 @@ public class Ship extends Node{
         }
     }
 
+    public void addImage(String path){
+        try {
+            img = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * called every frame
      */
@@ -86,9 +99,13 @@ public class Ship extends Node{
      */
     @Override
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.BLACK);
-        for (Shape shape:sprite){
-            g2.fill(shape);
+        g2.setColor(Color.BLUE);
+        if (img!=null){
+            g2.drawImage(img,(int)getX(),(int)getY(),null);
+        } else {
+            for (Shape shape:sprite){
+                g2.fill(shape);
+            }
         }
     }
 }

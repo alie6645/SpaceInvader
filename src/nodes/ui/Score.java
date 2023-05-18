@@ -17,9 +17,13 @@ public class Score implements GameObject {
         score += val;
     }
 
+    public void reset(){
+        score = 0;
+    }
+
     @Override
     public void draw(Graphics2D g2) {
-        g2.setColor(Color.BLACK);
-        g2.drawString("Score: "+score,10, GameLoop.height-50);
+        g2.setColor(Color.GREEN);
+        g2.drawString("Score: "+score,10, GameLoop.HEIGHT -50);
     }
 }

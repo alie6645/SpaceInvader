@@ -7,10 +7,10 @@ import java.awt.geom.Rectangle2D;
  * creates a rectangle projectile
  */
 public class Projectile extends Node{
-    private final int width = 3;
+    private final int width = 5;
     private final int height = 10;
-    private int lifetime = 20;
-    private Color base = Color.RED;
+    private int lifetime = 30;
+    private Color base = Color.GREEN;
 
     /**
      * creates a projectile at the given location, with the given velocity
@@ -26,10 +26,20 @@ public class Projectile extends Node{
         setyChange(yChange);
     }
 
+    public Projectile(double x, double y, double xChange, double yChange, Color color){
+        setX(x);
+        setY(y);
+        setxChange(xChange);
+        setyChange(yChange);
+        base = color;
+    }
+
     @Override
     public void draw(Graphics2D g2) {
         g2.setColor(base);
         g2.fillRect((int)getX(),(int)getY(),width,height);
+        g2.setColor(Color.lightGray);
+        g2.fillRect((int)getX()+width/4,(int)getY()+height/4,width/2,height/2);
     }
 
     /**

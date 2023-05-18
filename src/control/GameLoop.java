@@ -1,12 +1,12 @@
 package control;
 
-import nodes.Fleet;
-import nodes.GameObject;
-import nodes.Projectile;
-import nodes.Ship;
+import nodes.*;
 import nodes.ui.Lives;
 import nodes.ui.Score;
+import nodes.ui.Text;
+import visuals.Background;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +22,12 @@ public class GameLoop {
     static Lives lives = new Lives();
     static List<Projectile> missiles = new ArrayList<>();
     static List<Projectile> obstacles = new ArrayList<>();
-    public static final int width = 400;
-    public static final int height = 400;
+    static List<Flare> flares = new ArrayList<>();
+    public static final int WIDTH = 400;
+    public static final int HEIGHT = 400;
     private static final int cd = 10;
+    private static int enemyCD = 30;
+    private static int enemycdCount = enemyCD;
     private static final double BULLET_SPEED = 10;
     private static int cdCount = 0;
     public static int level = 1;
@@ -45,11 +48,27 @@ public class GameLoop {
         for (GameObject sprite:sprites){
             sprite.update();
         }
-        checkCollisions();
         fleet.update();
         if (cdCount>=0){
             cdCount--;
         }
+        if (enemycdCount>0){
+            enemycdCount--;
+        } else {
+            Ship source = fleet.random();
+            Projectile temp = new Projectile(source.getX(), source.getY(), 0,BULLET_SPEED);
+            obstacles.add(temp);
+            sprites.add(temp);
+            enemycdCount = enemyCD-level*5;
+        }
+        for (int i=0; i<flares.size(); i++){
+            if (flares.get(i).isDone()){
+                sprites.remove(flares.get(i));
+                flares.remove(i);
+                break;
+            }
+        }
+        checkCollisions();
     }
 
     /**
@@ -71,6 +90,14 @@ public class GameLoop {
             }
             if (player.hit(enemy.getHitbox())){
                 hurt();
+                fleet.shift(0,-50);
+            }
+        }
+        for (int i=0; i<obstacles.size(); i++){
+            if (player.hit(obstacles.get(i))){
+                sprites.remove(obstacles.get(i));
+                obstacles.remove(i);
+                hurt();
             }
         }
     }
@@ -86,6 +113,9 @@ public class GameLoop {
         missiles.remove(missile);
         sprites.remove(missile);
         score.addPoints(10*level);
+        Flare temp = new Flare((int)enemy.getX()+10,(int)enemy.getY()+10);
+        flares.add(temp);
+        sprites.add(temp);
         if (fleet.ships.isEmpty()){
             level++;
             fleet.createFleet(3,5);
@@ -98,7 +128,27 @@ public class GameLoop {
      * called on enemy-player collision
      */
     public static void hurt(){
+        lives.hurt();
+        if (lives.getCount()<=0){
+            lose();
+        }
 
+    }
+
+    /**
+     * called when player has no lives left
+     */
+    public static void lose(){
+        sprites.clear();
+        missiles.clear();
+        obstacles.clear();
+        fleet.ships.clear();
+        player.shift(-player.getX(), -player.getY());
+        level = 1;
+        score.reset();
+        lives.reset();
+        Launcher.timer.stop();
+        sprites.add(new Text("Game Over"));
     }
 
     /**
@@ -107,7 +157,7 @@ public class GameLoop {
     public static void shoot(){
         if (cdCount<=0){
             for (int i=0; i<shots; i++) {
-                Projectile missile = new Projectile(player.getX()+i*10, player.getY(), 0, -BULLET_SPEED);
+                Projectile missile = new Projectile(10+player.getX()+i*10, player.getY(), 0, -BULLET_SPEED, Color.RED);
                 sprites.add(missile);
                 missiles.add(missile);
             }
@@ -119,12 +169,19 @@ public class GameLoop {
      * initializes game objects
      */
     public static void initialize(){
-        player.addShape(new Rectangle(20,20));
+        int[] x = {0,10,20};
+        int[] y = {20,0,20};
+        player.addShape(new Polygon(x,y,3));
+        player.addImage("src/ship.png");
         player.shift(100,300);
+        Background back = new Background();
+        back.populate(20);
+        sprites.add(back);
         sprites.add(player);
         sprites.add(score);
         sprites.add(lives);
         fleet.createFleet(1,5);
         sprites.addAll(fleet.ships);
+
     }
 }
