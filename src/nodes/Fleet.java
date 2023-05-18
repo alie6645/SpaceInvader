@@ -1,6 +1,7 @@
 package nodes;
 
 import control.GameLoop;
+import nodes.Ship;
 
 import java.awt.*;
 import java.util.ArrayList;

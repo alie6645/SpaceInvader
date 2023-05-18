@@ -38,7 +38,6 @@ public class MenuKeypad extends KeyAdapter {
                 active.toggle();
                 break;
             case (' '):
-                active.toggle();
                 active.run();
         }
         menu.repaint();

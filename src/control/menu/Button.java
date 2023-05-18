@@ -49,7 +49,7 @@ public class Button {
         g2.fillRect(x,y,width,height);
         g2.setColor((active)?Color.BLACK:Color.GREEN);
         g2.drawRect(x,y,width,height);
-        g2.drawString(text,x+width/3,y+height/3);
+        g2.drawString(text,x+width/6,y+height/2);
     }
 
     /**

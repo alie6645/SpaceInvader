@@ -1,12 +1,13 @@
 package control;
 
 import nodes.*;
-import nodes.ui.Lives;
-import nodes.ui.Score;
-import nodes.ui.Text;
+import visuals.Flare;
+import visuals.ui.Lives;
+import visuals.ui.Score;
+import visuals.ui.Text;
 import visuals.Background;
+import nodes.Fleet;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class GameLoop {
             Projectile temp = new Projectile(source.getX(), source.getY(), 0,BULLET_SPEED);
             obstacles.add(temp);
             sprites.add(temp);
-            enemycdCount = enemyCD-level*5;
+            enemycdCount = enemyCD-level*2-fleet.ships.size()/4;
         }
         for (int i=0; i<flares.size(); i++){
             if (flares.get(i).isDone()){
@@ -129,6 +130,10 @@ public class GameLoop {
      */
     public static void hurt(){
         lives.hurt();
+        Flare temp = new Flare((int) player.getX(), (int) player.getY());
+        flares.add(temp);
+        sprites.add(temp);
+
         if (lives.getCount()<=0){
             lose();
         }
@@ -139,16 +144,21 @@ public class GameLoop {
      * called when player has no lives left
      */
     public static void lose(){
+        Launcher.timer.stop();
+        sprites.add(new Text("Game Over"));
+        sprites.add(new Text("Press Space to continue",100,120));
+    }
+
+    public static void reset(){
         sprites.clear();
         missiles.clear();
         obstacles.clear();
         fleet.ships.clear();
+        flares.clear();
         player.shift(-player.getX(), -player.getY());
         level = 1;
         score.reset();
         lives.reset();
-        Launcher.timer.stop();
-        sprites.add(new Text("Game Over"));
     }
 
     /**

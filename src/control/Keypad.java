@@ -27,6 +27,7 @@ public class Keypad extends KeyAdapter {
             case ' ':
                 GameLoop.shoot();
                 if (!Launcher.timer.isRunning()){
+                    GameLoop.reset();
                     Launcher.endGame();
                 }
         }
